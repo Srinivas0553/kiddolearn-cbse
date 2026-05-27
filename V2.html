@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KiddoLearn v2 — CBSE Class 2–5 Interactive Worksheets</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --p1:#667eea;--p2:#764ba2;--sun:#FFD93D;--coral:#FF6B6B;--sky:#4FC3F7;
+  --grass:#66BB6A;--mint:#26C6A0;--orange:#FF8C42;--pink:#F06292;
+  --violet:#9C6ADE;--navy:#1A237E;--cream:#FFF9F0;--white:#fff;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);overflow-x:hidden}
+
+/* ===== HERO ===== */
+.hero{background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);padding:2.5rem 1rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='30' fill='none' stroke='white' stroke-width='0.4' opacity='0.1'/%3E%3C/svg%3E") repeat}
+.hero-badge{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.5);border-radius:50px;display:inline-block;padding:6px 20px;font-size:12px;color:#fff;margin-bottom:.8rem;letter-spacing:1px;font-weight:800;position:relative}
+.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(2rem,6vw,3.8rem);color:#fff;text-shadow:3px 3px 0 rgba(0,0,0,.18);margin-bottom:.4rem;position:relative}
+.hero p{color:rgba(255,255,255,.92);font-size:1rem;margin-bottom:1.5rem;font-weight:700;position:relative}
+.hero-stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;position:relative}
+.stat-pill{background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.35);border-radius:50px;padding:6px 16px;color:#fff;font-size:12px;font-weight:800}
+
+/* CLASS PILLS */
+.class-bar{background:#fff;padding:12px 1rem;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;border-bottom:3px solid #f0f0f0;position:sticky;top:0;z-index:200;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.class-pill{padding:9px 22px;border:2.5px solid #e0e0e0;border-radius:50px;font-weight:800;font-size:14px;cursor:pointer;transition:all .2s;background:#fff;color:#666;font-family:'Nunito',sans-serif}
+.class-pill:hover{border-color:var(--p1);color:var(--p1)}
+.class-pill.active{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.06)}
+
+/* SUBJECT TABS */
+.subject-nav{background:#fff;padding:.8rem 1rem .6rem;box-shadow:0 4px 16px rgba(0,0,0,.07);position:sticky;top:57px;z-index:199}
+.subject-tabs{display:flex;gap:7px;overflow-x:auto;justify-content:center;flex-wrap:wrap;padding-bottom:2px}
+.subject-tabs::-webkit-scrollbar{display:none}
+.subject-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 14px;border-radius:14px;border:2.5px solid #e8e8e8;background:#fff;cursor:pointer;transition:all .2s;min-width:74px;font-size:11px;font-weight:800;color:#777;font-family:'Nunito',sans-serif}
+.subject-tab .si{font-size:1.4rem}
+.subject-tab:hover,.subject-tab.active{border-color:transparent;transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.12);color:#fff}
+.subject-tab[data-s="maths"]:hover,.subject-tab[data-s="maths"].active{background:var(--coral)}
+.subject-tab[data-s="english"]:hover,.subject-tab[data-s="english"].active{background:var(--sky)}
+.subject-tab[data-s="science"]:hover,.subject-tab[data-s="science"].active{background:var(--grass)}
+.subject-tab[data-s="evs"]:hover,.subject-tab[data-s="evs"].active{background:var(--mint)}
+.subject-tab[data-s="hindi"]:hover,.subject-tab[data-s="hindi"].active{background:var(--violet)}
+.subject-tab[data-s="sst"]:hover,.subject-tab[data-s="sst"].active{background:var(--pink)}
+.subject-tab[data-s="gk"]:hover,.subject-tab[data-s="gk"].active{background:var(--orange)}
+
+/* MAIN */
+.main{max-width:1140px;margin:0 auto;padding:1.8rem 1rem 3rem}
+.toprow{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:1.4rem}
+.sec-title{font-family:'Fredoka One',cursive;font-size:1.7rem;color:var(--navy);display:flex;align-items:center;gap:10px}
+.sec-badge{background:var(--navy);color:#fff;border-radius:50px;padding:4px 14px;font-size:12px;font-weight:800}
+.score-bar{background:#fff;border-radius:50px;padding:8px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(0,0,0,.09);font-weight:800;font-size:13px;color:var(--navy)}
+
+/* ACTIVITY TYPE FILTER */
+.type-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem}
+.type-btn{padding:7px 16px;border:2px solid #e0e0e0;border-radius:50px;font-size:12px;font-weight:800;cursor:pointer;background:#fff;color:#666;transition:all .18s;font-family:'Nunito',sans-serif}
+.type-btn:hover{border-color:var(--p1);color:var(--p1)}
+.type-btn.active{background:var(--p1);border-color:var(--p1);color:#fff}
+
+/* GRID */
+.ws-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.3rem}
+
+/* CARD */
+.ws-card{background:#fff;border-radius:22px;overflow:hidden;border:3px solid #f0f0f0;transition:all .22s;cursor:pointer;position:relative}
+.ws-card:hover{transform:translateY(-6px);box-shadow:0 18px 45px rgba(0,0,0,.12);border-color:#e8e8ff}
+.ws-card-top{padding:1.2rem 1.3rem;display:flex;align-items:center;gap:12px}
+.ws-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+.ws-meta .ws-name{font-weight:800;font-size:.95rem;color:#1a1a2e;margin-bottom:3px}
+.ws-meta .ws-sub{font-size:11px;color:#999;font-weight:700}
+.ws-card-tag{position:absolute;top:10px;right:10px;border-radius:50px;padding:3px 10px;font-size:10px;font-weight:800}
+.tag-quiz{background:#EDE7F6;color:#6A1B9A}
+.tag-blanks{background:#E3F2FD;color:#1565C0}
+.tag-match{background:#E8F5E9;color:#2E7D32}
+.tag-tf{background:#FFF3E0;color:#E65100}
+.tag-scramble{background:#FCE4EC;color:#AD1457}
+.ws-card-body{padding:0 1.3rem 1.3rem}
+.ws-preview{background:#f8f9ff;border-radius:14px;padding:.85rem;font-size:12px;color:#555;line-height:1.65;min-height:72px}
+.ws-actions{display:flex;gap:8px;margin-top:10px}
+.btn-play{flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:50px;padding:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;transition:all .2s}
+.btn-play:hover{transform:scale(1.04);box-shadow:0 6px 18px rgba(102,126,234,.4)}
+.btn-type-badge{background:#f4f4f4;color:#666;border:none;border-radius:50px;padding:10px 12px;font-size:11px;font-weight:800;font-family:'Nunito',sans-serif}
+
+/* ===== MODAL ===== */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:1000;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px)}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:28px;max-width:680px;width:100%;max-height:92vh;overflow-y:auto;padding:1.8rem;position:relative;border:4px solid var(--p1);animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal::-webkit-scrollbar{width:5px}
+.modal::-webkit-scrollbar-thumb{background:#ddd;border-radius:10px}
+.modal-close{position:absolute;top:14px;right:14px;background:#f0f0f0;border:none;border-radius:50%;width:38px;height:38px;font-size:1.1rem;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:#e0e0e0}
+.modal-title{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--navy);margin-bottom:1.3rem;padding-right:2.5rem;line-height:1.3}
+
+/* ===== QUIZ ===== */
+.qprog{height:7px;background:#f0f0f0;border-radius:50px;margin-bottom:1rem;overflow:hidden}
+.qprog-fill{height:100%;background:linear-gradient(90deg,var(--p1),var(--p2));border-radius:50px;transition:width .4s}
+.q-box{background:#f8f9ff;border-radius:18px;padding:1rem 1.2rem;margin-bottom:1rem}
+.q-num{font-size:11px;color:var(--p1);font-weight:800;margin-bottom:5px}
+.q-text{font-size:1.05rem;font-weight:800;color:#1a1a2e;line-height:1.45}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:.9rem}
+.opt{padding:12px 13px;border:2.5px solid #e0e0e0;border-radius:13px;cursor:pointer;font-weight:700;font-size:13px;transition:all .17s;background:#fff;text-align:center;color:#333;font-family:'Nunito',sans-serif;line-height:1.3}
+.opt:hover{border-color:var(--p1);background:#f4f4ff;transform:scale(1.02)}
+.opt.correct{border-color:var(--grass);background:#E8F5E9;color:#2e7d32}
+.opt.wrong{border-color:var(--coral);background:#FFEBEE;color:#c62828}
+.fb{text-align:center;font-weight:800;font-size:13px;padding:10px;border-radius:12px;min-height:42px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.fb.good{background:#E8F5E9;color:#2e7d32}
+.fb.bad{background:#FFEBEE;color:#c62828}
+.fb.idle{background:#f8f9ff;color:#999}
+.action-btn{width:100%;padding:13px;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;cursor:pointer;transition:all .2s;display:none;margin-top:6px}
+.action-btn.show{display:block}
+.action-btn.next{background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.action-btn.next:hover{transform:scale(1.02)}
+.action-btn.retry{background:linear-gradient(135deg,var(--grass),#00796B);color:#fff}
+
+/* RESULT */
+.result{text-align:center;padding:1.2rem 0}
+.r-stars{font-size:2.8rem;margin-bottom:.8rem}
+.r-score{font-family:'Fredoka One',cursive;font-size:3.8rem;color:var(--p1);margin-bottom:.4rem}
+.r-msg{font-size:1rem;font-weight:700;color:#555;margin-bottom:1rem}
+.r-stats{background:#f8f9ff;border-radius:14px;padding:.9rem 1.3rem;font-size:13px;color:#666;font-weight:700;margin-bottom:1.2rem;line-height:2}
+
+/* ===== TRUE/FALSE ===== */
+.tf-row{background:#f8f9ff;border-radius:16px;padding:1rem 1.2rem;margin-bottom:10px}
+.tf-stmt{font-weight:700;font-size:14px;color:#1a1a2e;margin-bottom:.7rem;line-height:1.4}
+.tf-btns{display:flex;gap:10px}
+.tf-btn{flex:1;padding:10px;border:2.5px solid #e0e0e0;border-radius:12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;cursor:pointer;background:#fff;transition:all .17s}
+.tf-btn[data-v="true"]:hover{border-color:var(--grass);background:#E8F5E9;color:#2e7d32}
+.tf-btn[data-v="false"]:hover{border-color:var(--coral);background:#FFEBEE;color:#c62828}
+.tf-btn.correct{border-color:var(--grass);background:#E8F5E9;color:#2e7d32}
+.tf-btn.wrong{border-color:var(--coral);background:#FFEBEE;color:#c62828}
+.tf-btn:disabled{cursor:default}
+
+/* ===== FILL BLANKS ===== */
+.blank-hint{font-size:12px;color:#888;font-weight:700;margin-bottom:.9rem}
+.blank-row{background:#f8f9ff;border-radius:14px;padding:12px 14px;margin-bottom:10px;font-size:14px;font-weight:700;color:#1a1a2e;line-height:2.4}
+.blank-inp{border:none;border-bottom:3px solid var(--p1);background:transparent;padding:3px 7px;font-weight:800;font-size:14px;color:#1a1a2e;width:110px;text-align:center;outline:none;font-family:'Nunito',sans-serif;transition:all .18s}
+.blank-inp.ok{border-bottom-color:var(--grass);background:#E8F5E9;border-radius:7px;color:#2e7d32}
+.blank-inp.fail{border-bottom-color:var(--coral);background:#FFEBEE;border-radius:7px;color:#c62828}
+.check-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--mint),#00796B);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;cursor:pointer;margin-top:8px}
+.check-btn:hover{transform:scale(1.02)}
+
+/* ===== MATCHING ===== */
+.match-hint{font-size:12px;color:#888;font-weight:700;margin-bottom:.9rem}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:.9rem}
+.match-col{display:flex;flex-direction:column;gap:7px}
+.mi{padding:12px 10px;border:2.5px solid #e0e0e0;border-radius:13px;background:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:all .17s;text-align:center;color:#333;line-height:1.3;font-family:'Nunito',sans-serif}
+.mi:hover:not(.done){border-color:var(--p1);background:#f4f4ff}
+.mi.sel{border-color:var(--p1);background:#f0f0ff;color:var(--navy)}
+.mi.done{border-color:var(--grass);background:#E8F5E9;color:#2e7d32;cursor:default}
+.mi.err{border-color:var(--coral);background:#FFEBEE;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-6px)}70%{transform:translateX(6px)}}
+
+/* ===== WORD SCRAMBLE ===== */
+.scramble-hint{font-size:12px;color:#888;font-weight:700;margin-bottom:.9rem}
+.scramble-item{background:#f8f9ff;border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.scramble-clue{font-size:13px;color:#555;font-weight:700;margin-bottom:8px}
+.scramble-letters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.letter-tile{width:36px;height:36px;border:2.5px solid #667eea;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;cursor:pointer;transition:all .15s;color:var(--navy);user-select:none}
+.letter-tile:hover{background:#f0f0ff;transform:scale(1.08)}
+.letter-tile.used{opacity:.25;cursor:default;transform:none}
+.scramble-answer{display:flex;gap:7px;flex-wrap:wrap;min-height:44px;padding:6px;background:#fff;border:2.5px dashed #ccc;border-radius:12px;align-items:center}
+.answer-tile{width:36px;height:36px;border:2.5px solid var(--grass);border-radius:10px;background:#E8F5E9;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;cursor:pointer;color:#2e7d32;transition:all .15s}
+.answer-tile:hover{transform:scale(1.08)}
+.scramble-fb{font-size:12px;font-weight:800;margin-top:6px;min-height:18px}
+.scramble-fb.ok{color:var(--grass)}
+.scramble-fb.fail{color:var(--coral)}
+.scramble-check{margin-top:10px;padding:11px;background:linear-gradient(135deg,var(--orange),#e65100);color:#fff;border:none;border-radius:50px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;width:100%}
+
+/* CONFETTI */
+.cp{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:9999;animation:cffall 2s ease-in forwards}
+@keyframes cffall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(108vh) rotate(720deg);opacity:0}}
+
+/* FOOTER */
+footer{background:var(--navy);color:#fff;text-align:center;padding:2.5rem 1rem;margin-top:2rem}
+footer h3{font-family:'Fredoka One',cursive;font-size:1.7rem;margin-bottom:.4rem}
+footer p{opacity:.65;font-size:12px;margin-top:3px}
+.f-chips{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.f-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:50px;padding:5px 14px;font-size:11px;font-weight:800}
+
+@media(max-width:580px){
+  .opts,.match-grid{grid-template-columns:1fr}
+  .ws-grid{grid-template-columns:1fr}
+  .tf-btns{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">✨ CBSE NCERT ALIGNED · CLASS 2 TO 5</div>
+  <h1>🎓 KiddoLearn v2</h1>
+  <p>Interactive Worksheets · All Subjects · 5 Activity Types · Class 2–5</p>
+  <div class="hero-stats">
+    <span class="stat-pill">📚 4 Classes</span>
+    <span class="stat-pill">🔬 7 Subjects</span>
+    <span class="stat-pill">🎯 5 Activity Types</span>
+    <span class="stat-pill">📝 200+ Worksheets</span>
+  </div>
+</div>
+
+<div class="class-bar">
+  <button class="class-pill active" onclick="setClass(this,2)">🌱 Class 2</button>
+  <button class="class-pill" onclick="setClass(this,3)">📗 Class 3</button>
+  <button class="class-pill" onclick="setClass(this,4)">📘 Class 4</button>
+  <button class="class-pill" onclick="setClass(this,5)">🏆 Class 5</button>
+</div>
+
+<div class="subject-nav">
+  <div class="subject-tabs">
+    <div class="subject-tab active" data-s="maths" onclick="setSub(this,'maths')"><span class="si">🔢</span>Maths</div>
+    <div class="subject-tab" data-s="english" onclick="setSub(this,'english')"><span class="si">📖</span>English</div>
+    <div class="subject-tab" data-s="science" onclick="setSub(this,'science')"><span class="si">🔬</span>Science</div>
+    <div class="subject-tab" data-s="evs" onclick="setSub(this,'evs')"><span class="si">🌿</span>EVS</div>
+    <div class="subject-tab" data-s="hindi" onclick="setSub(this,'hindi')"><span class="si">📝</span>Hindi</div>
+    <div class="subject-tab" data-s="sst" onclick="setSub(this,'sst')"><span class="si">🗺️</span>S.St.</div>
+    <div class="subject-tab" data-s="gk" onclick="setSub(this,'gk')"><span class="si">🌍</span>G.K.</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="toprow">
+    <div class="sec-title" id="sec-title">🔢 Mathematics <span class="sec-badge" id="sec-badge">Class 2</span></div>
+    <div class="score-bar">🔥<span id="streak">0</span> &nbsp;|&nbsp; ⭐<span id="pts">0</span> pts</div>
+  </div>
+  <div class="type-filter" id="type-filter"></div>
+  <div class="ws-grid" id="ws-grid"></div>
+</div>
+
+<footer>
+  <h3>🎓 KiddoLearn v2</h3>
+  <p>Free CBSE interactive worksheets · Class 2 to 5 · All subjects covered</p>
+  <p style="margin-top:4px">Inspired by kiddoworksheets.com · Built for Indian classrooms 🇮🇳</p>
+  <div class="f-chips">
+    <span class="f-chip">📘 NCERT Aligned</span>
+    <span class="f-chip">❓ Quiz</span>
+    <span class="f-chip">✏️ Fill Blanks</span>
+    <span class="f-chip">🔗 Matching</span>
+    <span class="f-chip">✅ True/False</span>
+    <span class="f-chip">🔀 Word Scramble</span>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// DATA — Class 2-5, All 7 Subjects, 5 Activity Types
+// =====================================================================
+const DATA = {
+
+// ========================= CLASS 2 =========================
+2:{
+  maths:{label:"🔢 Mathematics",bg:"#FF6B6B18",sheets:[
+    {n:"Counting & Numbers",s:"Numbers up to 1000",e:"🔢",type:"quiz",tag:"📘 NCERT",
+     preview:"Count, read and write numbers up to 1000 with place value.",
+     q:[{q:"What comes after 199?",o:["198","200","201","210"],a:1},
+        {q:"Which is the smallest 3-digit number?",o:["99","100","999","101"],a:1},
+        {q:"What is 345 + 200?",o:["505","545","645","445"],a:1},
+        {q:"500 + 60 + 7 = ?",o:["567","576","657","675"],a:0},
+        {q:"Which digit is in the tens place of 472?",o:["4","7","2","47"],a:1}]},
+    {n:"Addition & Subtraction",s:"Two and three digit",e:"➕",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the sums and differences of two and three digit numbers.",
+     b:[{s:"45 + 32 = ___",a:"77"},{s:"100 - 38 = ___",a:"62"},{s:"256 + 143 = ___",a:"399"},{s:"500 - 250 = ___",a:"250"},{s:"78 + 22 = ___",a:"100"}]},
+    {n:"Shapes Around Us",s:"2D shapes identification",e:"🔵",type:"match",tag:"🔗 Match",
+     preview:"Match the shape names to their pictures and descriptions.",
+     p:[{a:"Circle",b:"No corners"},{a:"Square",b:"4 equal sides"},{a:"Triangle",b:"3 sides"},{a:"Rectangle",b:"Opposite sides equal"}]},
+    {n:"Odd & Even Numbers",s:"Identify odd and even",e:"🔄",type:"tf",tag:"✅ True/False",
+     preview:"Tell whether each statement about odd and even numbers is true or false.",
+     tf:[{s:"12 is an even number.",a:true},{s:"7 is an even number.",a:false},{s:"0 is an even number.",a:true},{s:"All numbers ending in 5 are even.",a:false},{s:"25 is an odd number.",a:true}]},
+    {n:"Days & Months",s:"Calendar vocabulary",e:"📅",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble the jumbled calendar words to reveal the correct spelling.",
+     sc:[{clue:"First month of the year",word:"JANUARY",scrambled:"UJANAYR"},
+         {clue:"Day after Sunday",word:"MONDAY",scrambled:"NODMAY"},
+         {clue:"Seventh day of the week",word:"SATURDAY",scrambled:"ATURDSAY"},
+         {clue:"Month with 28 or 29 days",word:"FEBRUARY",scrambled:"EURBAYFR"}]},
+    {n:"Multiplication Intro",s:"Groups and repeated addition",e:"✖️",type:"quiz",tag:"📘 NCERT",
+     preview:"Understand multiplication as repeated addition with simple tables.",
+     q:[{q:"2 × 3 = ?",o:["5","6","4","8"],a:1},{q:"4 × 2 = ?",o:["6","8","10","4"],a:1},
+        {q:"5 × 2 = ?",o:["7","10","12","8"],a:1},{q:"3 × 3 = ?",o:["6","9","12","3"],a:1},
+        {q:"2 groups of 6 = ?",o:["8","10","12","14"],a:2}]}
+  ]},
+  english:{label:"📖 English",bg:"#4FC3F718",sheets:[
+    {n:"Action Words (Verbs)",s:"Identify verbs in sentences",e:"🏃",type:"quiz",tag:"📘 NCERT",
+     preview:"Identify action words (verbs) in sentences — a CBSE Class 2 English topic.",
+     q:[{q:"Which is the verb in 'The dog runs fast'?",o:["dog","runs","fast","The"],a:1},
+        {q:"Which word shows action?",o:["happy","big","jump","red"],a:2},
+        {q:"She ___ her homework every day.",o:["does","do","doing","done"],a:0},
+        {q:"The bird ___ in the sky.",o:["flied","fly","flies","flying"],a:2},
+        {q:"We ___ cricket yesterday.",o:["play","plays","played","playing"],a:2}]},
+    {n:"Describing Words",s:"Adjectives practice",e:"🌈",type:"blanks",tag:"✏️ Grammar",
+     preview:"Fill in the blanks with the correct describing word (adjective).",
+     b:[{s:"The sky is ___ in colour.",a:"blue"},{s:"Sugar tastes ___.",a:"sweet"},{s:"Elephants are ___ animals.",a:"big"},{s:"Ice feels very ___.",a:"cold"},{s:"Flowers smell ___.",a:"nice"}]},
+    {n:"Rhyming Words",s:"Find the rhyming pair",e:"🎵",type:"match",tag:"🔗 Match",
+     preview:"Match words that rhyme with each other — a fun phonics activity!",
+     p:[{a:"Cat",b:"Mat"},{a:"Moon",b:"Spoon"},{a:"Rain",b:"Train"},{a:"Play",b:"Day"}]},
+    {n:"Naming Words (Nouns)",s:"Common and Proper nouns",e:"📛",type:"tf",tag:"✅ True/False",
+     preview:"True or False — identify whether statements about nouns are correct.",
+     tf:[{s:"'India' is a proper noun.",a:true},{s:"'Dog' is a proper noun.",a:false},{s:"'Monday' starts with a capital letter.",a:true},{s:"'table' is a proper noun.",a:false},{s:"Your name is a proper noun.",a:true}]},
+    {n:"Jumbled Sentences",s:"Unscramble the words",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble the letters to form the correct English words.",
+     sc:[{clue:"Opposite of night",word:"DAY",scrambled:"YAD"},{clue:"A domestic animal",word:"CAT",scrambled:"ACT"},{clue:"Shines in the sky at night",word:"MOON",scrambled:"NOMO"},{clue:"We drink this every morning",word:"MILK",scrambled:"KLIM"}]}
+  ]},
+  science:{label:"🔬 Science",bg:"#66BB6A18",sheets:[
+    {n:"Plants Around Us",s:"Parts of a plant",e:"🌱",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn the parts of a plant and their functions — Class 2 Science.",
+     q:[{q:"Which part of the plant makes food?",o:["Root","Stem","Leaf","Flower"],a:2},
+        {q:"Roots help the plant to ___",o:["make food","absorb water","make flowers","give fruits"],a:1},
+        {q:"Which part holds the plant upright?",o:["Root","Stem","Leaf","Seed"],a:1},
+        {q:"Flowers grow into ___",o:["leaves","seeds & fruits","roots","stems"],a:1},
+        {q:"A cactus stores water in its ___",o:["leaves","roots","stem","flowers"],a:2}]},
+    {n:"Animals & Their Young",s:"Match parents to babies",e:"🐣",type:"match",tag:"🔗 Match",
+     preview:"Match each animal to its baby name — a fun Class 2 Science activity!",
+     p:[{a:"Cow",b:"Calf"},{a:"Dog",b:"Puppy"},{a:"Cat",b:"Kitten"},{a:"Hen",b:"Chick"}]},
+    {n:"My Body",s:"Body parts and their use",e:"🧒",type:"tf",tag:"✅ True/False",
+     preview:"True or False about the human body and its parts.",
+     tf:[{s:"We use our eyes to see.",a:true},{s:"We taste food with our nose.",a:false},{s:"Ears help us to hear.",a:true},{s:"We have 4 fingers on each hand.",a:false},{s:"Skin protects our body.",a:true}]},
+    {n:"Food We Eat",s:"Healthy vs junk food",e:"🥗",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the blanks about the food we eat and healthy eating habits.",
+     b:[{s:"Fruits and vegetables keep us ___.",a:"healthy"},{s:"We should drink plenty of ___ daily.",a:"water"},{s:"Milk gives us strong ___ and teeth.",a:"bones"},{s:"Eating too much junk food makes us ___.",a:"sick"}]}
+  ]},
+  evs:{label:"🌿 EVS",bg:"#26C6A018",sheets:[
+    {n:"My Family",s:"Family members and relationships",e:"👨‍👩‍👧",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about family members and their relationships — Class 2 EVS.",
+     q:[{q:"Your mother's mother is your ___",o:["aunt","grandmother","sister","cousin"],a:1},
+        {q:"Your father's brother is your ___",o:["uncle","cousin","brother","grandfather"],a:0},
+        {q:"A nuclear family has ___",o:["many relatives","only parents and children","only grandparents","only cousins"],a:1},
+        {q:"People in a family ___ each other.",o:["ignore","help","fight","leave"],a:1},
+        {q:"Siblings are ___",o:["parents","brothers and sisters","cousins","neighbours"],a:1}]},
+    {n:"Our Neighbourhood",s:"Places around us",e:"🏘️",type:"match",tag:"🔗 Match",
+     preview:"Match places in the neighbourhood to what we do there.",
+     p:[{a:"Hospital",b:"Get treated"},{a:"School",b:"Study"},{a:"Market",b:"Buy things"},{a:"Park",b:"Play & exercise"}]},
+    {n:"Air & Water",s:"Importance of natural resources",e:"💧",type:"tf",tag:"✅ True/False",
+     preview:"True or False about air and water — important natural resources.",
+     tf:[{s:"We cannot live without air.",a:true},{s:"Air has no weight.",a:false},{s:"Water is needed only for drinking.",a:false},{s:"Clean water is safe for drinking.",a:true},{s:"Air is invisible.",a:true}]},
+    {n:"Seasons & Weather",s:"Types of seasons in India",e:"🌦️",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble the names of weather and seasons.",
+     sc:[{clue:"Season when it rains",word:"MONSOON",scrambled:"NOMOONS"},{clue:"Opposite of summer",word:"WINTER",scrambled:"TREWNI"},{clue:"Water falls from the sky",word:"RAIN",scrambled:"NAIR"},{clue:"Bright and sunny weather",word:"SUNNY",scrambled:"NUNSY"}]}
+  ]},
+  hindi:{label:"📝 Hindi",bg:"#9C6ADE18",sheets:[
+    {n:"स्वर (Vowels)",s:"Hindi vowels identification",e:"अ",type:"quiz",tag:"📘 NCERT",
+     preview:"पहचानिए — कौन से अक्षर स्वर हैं? Identify Hindi vowels.",
+     q:[{q:"निम्न में से कौन स्वर है?",o:["क","अ","ग","प"],a:1},
+        {q:"'आ' किसकी मात्रा है?",o:["इ","आ","उ","ए"],a:1},
+        {q:"हिंदी में कुल कितने स्वर होते हैं?",o:["10","11","12","13"],a:2},
+        {q:"'ई' की मात्रा कौन सी है?",o:["ि","ी","ु","े"],a:1},
+        {q:"अनुस्वार का चिन्ह क्या है?",o:["ँ","ं","ः","्"],a:1}]},
+    {n:"फल और सब्जियां",s:"Fruits and vegetables in Hindi",e:"🍎",type:"match",tag:"🔗 Match",
+     preview:"Match the Hindi names to the correct fruit or vegetable.",
+     p:[{a:"आम",b:"Mango"},{a:"केला",b:"Banana"},{a:"गाजर",b:"Carrot"},{a:"टमाटर",b:"Tomato"}]},
+    {n:"मेरा परिवार",s:"Family members in Hindi",e:"👨‍👩‍👧",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the Hindi words for family members.",
+     b:[{s:"Father को हिंदी में ___ कहते हैं।",a:"पिता"},{s:"Mother को हिंदी में ___ कहते हैं।",a:"माता"},{s:"Brother को हिंदी में ___ कहते हैं।",a:"भाई"},{s:"Sister को हिंदी में ___ कहते हैं।",a:"बहन"}]}
+  ]},
+  sst:{label:"🗺️ Social Studies",bg:"#F0629218",sheets:[
+    {n:"Our Country India",s:"Basic facts about India",e:"🇮🇳",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn basic facts about India — our country, flag and national symbols.",
+     q:[{q:"The capital of India is ___",o:["Mumbai","New Delhi","Chennai","Kolkata"],a:1},
+        {q:"Our national flag has ___ colours.",o:["2","3","4","5"],a:1},
+        {q:"The national animal of India is ___",o:["Lion","Elephant","Tiger","Leopard"],a:2},
+        {q:"National bird of India is ___",o:["Sparrow","Crow","Parrot","Peacock"],a:3},
+        {q:"India is in the continent of ___",o:["Africa","Europe","Asia","Australia"],a:2}]},
+    {n:"Transport",s:"Means of transport",e:"🚗",type:"match",tag:"🔗 Match",
+     preview:"Match the mode of transport to where it travels.",
+     p:[{a:"Aeroplane",b:"Air"},{a:"Ship",b:"Water"},{a:"Train",b:"Rail track"},{a:"Car",b:"Road"}]},
+    {n:"National Symbols",s:"Symbols of India",e:"🏵️",type:"tf",tag:"✅ True/False",
+     preview:"True or False about India's national symbols.",
+     tf:[{s:"Lotus is the national flower of India.",a:true},{s:"The national bird is Sparrow.",a:false},{s:"Hockey is India's national sport.",a:true},{s:"The national fruit is Orange.",a:false},{s:"Mango is the national fruit of India.",a:true}]}
+  ]},
+  gk:{label:"🌍 General Knowledge",bg:"#FF8C4218",sheets:[
+    {n:"Animals GK",s:"Interesting animal facts",e:"🦁",type:"quiz",tag:"🌏 GK",
+     preview:"Fun and interesting GK questions about animals from around the world.",
+     q:[{q:"Which is the tallest animal?",o:["Elephant","Giraffe","Camel","Horse"],a:1},
+        {q:"Which animal is known as King of Jungle?",o:["Tiger","Bear","Lion","Leopard"],a:2},
+        {q:"Which bird cannot fly?",o:["Parrot","Eagle","Ostrich","Sparrow"],a:2},
+        {q:"Which animal has a hump?",o:["Horse","Camel","Donkey","Ox"],a:1},
+        {q:"Which is the largest animal on land?",o:["Rhino","Hippo","Elephant","Giraffe"],a:2}]},
+    {n:"Number GK",s:"Interesting number facts",e:"🔢",type:"tf",tag:"✅ True/False",
+     preview:"True or False — fun and interesting facts about numbers.",
+     tf:[{s:"A dozen means 12.",a:true},{s:"A century means 100.",a:true},{s:"A fortnight is 10 days.",a:false},{s:"There are 60 seconds in a minute.",a:true},{s:"There are 30 hours in a day.",a:false}]}
+  ]}
+},
+
+// ========================= CLASS 3 =========================
+3:{
+  maths:{label:"🔢 Mathematics",bg:"#FF6B6B18",sheets:[
+    {n:"Multiplication Tables",s:"Times tables 2–12",e:"✖️",type:"quiz",tag:"🏆 Popular",
+     preview:"Practice multiplication facts up to 12×12 with instant feedback!",
+     q:[{q:"7 × 8 = ?",o:["54","56","48","63"],a:1},{q:"9 × 6 = ?",o:["54","48","63","72"],a:0},
+        {q:"12 × 4 = ?",o:["44","36","48","52"],a:2},{q:"6 × 7 = ?",o:["36","48","42","56"],a:2},
+        {q:"11 × 9 = ?",o:["99","108","88","121"],a:0}]},
+    {n:"Division Basics",s:"Equal sharing & grouping",e:"➗",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn division as equal sharing — CBSE Class 3 Maths topic.",
+     q:[{q:"48 ÷ 6 = ?",o:["6","7","8","9"],a:2},{q:"72 ÷ 9 = ?",o:["7","8","9","6"],a:1},
+        {q:"56 ÷ 7 = ?",o:["6","8","7","9"],a:1},{q:"81 ÷ 9 = ?",o:["8","9","7","6"],a:1},
+        {q:"64 ÷ 8 = ?",o:["6","7","8","9"],a:2}]},
+    {n:"Fractions",s:"Half, quarter and more",e:"½",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the blanks to complete fraction statements.",
+     b:[{s:"½ of 20 = ___",a:"10"},{s:"¼ of 40 = ___",a:"10"},{s:"¾ of 12 = ___",a:"9"},{s:"⅓ of 30 = ___",a:"10"},{s:"⅔ of 18 = ___",a:"12"}]},
+    {n:"Geometry Shapes",s:"2D and 3D shapes",e:"📐",type:"match",tag:"🔗 Match",
+     preview:"Match 3D shapes to their properties and real-life examples.",
+     p:[{a:"Cube",b:"6 equal faces"},{a:"Cone",b:"Pointed top"},{a:"Sphere",b:"Perfectly round"},{a:"Cylinder",b:"2 circular faces"}]},
+    {n:"Maths True/False",s:"Number facts verification",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"Decide whether each Maths statement is true or false.",
+     tf:[{s:"A square has 4 equal sides.",a:true},{s:"0 is an odd number.",a:false},{s:"Every even number is divisible by 2.",a:true},{s:"A triangle has 4 angles.",a:false},{s:"10 × 0 = 0",a:true}]},
+    {n:"Maths Vocabulary",s:"Unscramble maths words",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble these important Maths vocabulary words.",
+     sc:[{clue:"Result of addition",word:"SUM",scrambled:"MUS"},{clue:"Result of multiplication",word:"PRODUCT",scrambled:"RODCUPT"},{clue:"Figures with 3 sides",word:"TRIANGLE",scrambled:"LAGTIREN"},{clue:"Part of a whole",word:"FRACTION",scrambled:"NOCITARF"}]}
+  ]},
+  english:{label:"📖 English",bg:"#4FC3F718",sheets:[
+    {n:"Noun Types",s:"Common, Proper, Collective, Abstract",e:"📖",type:"quiz",tag:"📘 NCERT",
+     preview:"Identify the types of nouns in sentences — Class 3 English grammar.",
+     q:[{q:"'Mumbai' is a ___ noun.",o:["Common","Proper","Collective","Abstract"],a:1},
+        {q:"A ___ of fish is called a school.",o:["herd","pack","school","flock"],a:2},
+        {q:"'Happiness' is a ___ noun.",o:["Common","Proper","Collective","Abstract"],a:3},
+        {q:"Which is a collective noun?",o:["Tiger","India","Bunch","Love"],a:2},
+        {q:"'dog' is a ___ noun.",o:["Proper","Abstract","Collective","Common"],a:3}]},
+    {n:"Tenses",s:"Past, present and future",e:"⏱️",type:"blanks",tag:"✏️ Grammar",
+     preview:"Fill in the correct tense form of the verb in each sentence.",
+     b:[{s:"She ___ (go) to school every day. → goes",a:"goes"},{s:"They ___ cricket yesterday. → played",a:"played"},{s:"He will ___ the market tomorrow. → visit",a:"visit"},{s:"I ___ eating now. → am",a:"am"},{s:"We ___ the film last night. → watched",a:"watched"}]},
+    {n:"Antonyms",s:"Opposite words",e:"🔄",type:"match",tag:"🔗 Match",
+     preview:"Match words to their correct antonyms (opposite words).",
+     p:[{a:"Happy",b:"Sad"},{a:"Big",b:"Small"},{a:"Fast",b:"Slow"},{a:"Day",b:"Night"}]},
+    {n:"Grammar True/False",s:"English grammar facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — test your English grammar knowledge.",
+     tf:[{s:"A sentence always starts with a capital letter.",a:true},{s:"'Run' is a noun.",a:false},{s:"Full stop (.) ends a statement.",a:true},{s:"'Beautiful' is a verb.",a:false},{s:"'Quickly' is an adverb.",a:true}]},
+    {n:"English Word Scramble",s:"Vocabulary builder",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble these commonly used English vocabulary words.",
+     sc:[{clue:"Opposite of dark",word:"BRIGHT",scrambled:"THRIGH"},{clue:"Very large animal with trunk",word:"ELEPHANT",scrambled:"PHALTEEN"},{clue:"What you read",word:"BOOK",scrambled:"KOOB"},{clue:"Season with flowers",word:"SPRING",scrambled:"GRIPNS"}]}
+  ]},
+  science:{label:"🔬 Science",bg:"#66BB6A18",sheets:[
+    {n:"Living & Non-living",s:"Classification activity",e:"🌱",type:"quiz",tag:"📘 NCERT",
+     preview:"Classify objects as living or non-living with real-world examples.",
+     q:[{q:"Which is a living thing?",o:["Stone","Water","Mushroom","Sand"],a:2},
+        {q:"Living things need ___ to grow.",o:["plastic","food & water","glass","metal"],a:1},
+        {q:"Which is non-living?",o:["Fish","Tree","Chair","Bacteria"],a:2},
+        {q:"Plants make their own food by ___",o:["eating soil","photosynthesis","drinking water","sleeping"],a:1},
+        {q:"Animals that eat only plants are called ___",o:["carnivores","omnivores","herbivores","predators"],a:2}]},
+    {n:"States of Matter",s:"Solid, liquid and gas",e:"🧪",type:"match",tag:"🔗 Match",
+     preview:"Match each material to its correct state of matter.",
+     p:[{a:"Ice",b:"Solid"},{a:"Steam",b:"Gas"},{a:"Milk",b:"Liquid"},{a:"Wood",b:"Solid"}]},
+    {n:"Science True/False",s:"Science fact checker",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — check your science knowledge with these statements.",
+     tf:[{s:"The sun rises in the east.",a:true},{s:"Plants need darkness to make food.",a:false},{s:"Water boils at 100°C.",a:true},{s:"Sound travels faster than light.",a:false},{s:"Oxygen is needed for burning.",a:true}]},
+    {n:"Science Words",s:"Unscramble science terms",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important science vocabulary words.",
+     sc:[{clue:"Process by which plants make food",word:"PHOTOSYNTHESIS",scrambled:"PHOTHETSSISYN"},{clue:"Tiny living things",word:"GERMS",scrambled:"MRSEG"},{clue:"H2O",word:"WATER",scrambled:"RETWA"},{clue:"Opposite of solid",word:"LIQUID",scrambled:"ILDQUI"}]}
+  ]},
+  evs:{label:"🌿 EVS",bg:"#26C6A018",sheets:[
+    {n:"Our Environment",s:"Ecosystem & conservation",e:"🌍",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about the environment, ecosystem and conservation.",
+     q:[{q:"Plants absorb ___ during photosynthesis.",o:["Oxygen","CO₂","Nitrogen","Helium"],a:1},
+        {q:"Forests are the ___ of the Earth.",o:["lungs","heart","bones","blood"],a:0},
+        {q:"Rainwater harvesting conserves ___.",o:["soil","air","water","energy"],a:2},
+        {q:"Animals eating only plants are called ___.",o:["carnivores","omnivores","herbivores","predators"],a:2},
+        {q:"The layer of air around Earth is called ___.",o:["hydrosphere","lithosphere","atmosphere","biosphere"],a:2}]},
+    {n:"Water Conservation",s:"Save water activities",e:"💧",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the blanks about water conservation.",
+     b:[{s:"Turn off taps when not in ___.",a:"use"},{s:"___ is the largest ocean on Earth.",a:"Pacific"},{s:"Water underground is called ___ water.",a:"ground"},{s:"The water cycle involves evaporation and ___.",a:"rain"}]},
+    {n:"Plants & Animals",s:"Classification & habitats",e:"🦁",type:"match",tag:"🔗 Match",
+     preview:"Match animals and plants to their correct category.",
+     p:[{a:"Tiger",b:"Carnivore"},{a:"Deer",b:"Herbivore"},{a:"Crow",b:"Omnivore"},{a:"Cactus",b:"Desert plant"}]},
+    {n:"Environment True/False",s:"Eco facts checker",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — environmental awareness questions.",
+     tf:[{s:"Cutting trees is called afforestation.",a:false},{s:"We should save electricity.",a:true},{s:"Plastic takes many years to decompose.",a:true},{s:"Air pollution is good for health.",a:false},{s:"Planting trees helps the environment.",a:true}]}
+  ]},
+  hindi:{label:"📝 Hindi",bg:"#9C6ADE18",sheets:[
+    {n:"सर्वनाम (Pronouns)",s:"Hindi pronouns",e:"📝",type:"quiz",tag:"📘 NCERT",
+     preview:"सर्वनाम पहचानिए — Learn Hindi pronouns.",
+     q:[{q:"'वह' किस प्रकार का सर्वनाम है?",o:["उत्तम पुरुष","मध्यम पुरुष","अन्य पुरुष","निश्चयवाचक"],a:2},
+        {q:"'मैं' किसके लिए प्रयोग होता है?",o:["दूसरे के लिए","खुद के लिए","सबके लिए","किसी के लिए नहीं"],a:1},
+        {q:"'आप' कौन सा सर्वनाम है?",o:["उत्तम पुरुष","मध्यम पुरुष","अन्य पुरुष","निजवाचक"],a:1},
+        {q:"सर्वनाम किसके स्थान पर आता है?",o:["क्रिया","संज्ञा","विशेषण","क्रिया-विशेषण"],a:1},
+        {q:"'हम' किस वचन में है?",o:["एकवचन","द्विवचन","बहुवचन","कोई नहीं"],a:2}]},
+    {n:"पर्यायवाची शब्द",s:"Hindi synonyms match",e:"🔗",type:"match",tag:"🔗 Match",
+     preview:"Match Hindi words with their synonyms (same meaning).",
+     p:[{a:"जल",b:"पानी"},{a:"सूर्य",b:"रवि"},{a:"पुष्प",b:"फूल"},{a:"नेत्र",b:"आंख"}]},
+    {n:"Hindi Fill Blanks",s:"Sentence completion",e:"✏️",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the blanks to complete Hindi sentences.",
+     b:[{s:"भारत की राजधानी ___ है।",a:"दिल्ली"},{s:"सूर्य ___ में उगता है।",a:"पूर्व"},{s:"हमारा राष्ट्रीय पशु ___ है।",a:"बाघ"},{s:"राष्ट्रीय फूल ___ है।",a:"कमल"}]}
+  ]},
+  sst:{label:"🗺️ Social Studies",bg:"#F0629218",sheets:[
+    {n:"States & Capitals",s:"Know India's states",e:"🇮🇳",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn Indian states and their capitals — key CBSE SSt topic.",
+     q:[{q:"Capital of Rajasthan?",o:["Jodhpur","Udaipur","Jaipur","Bikaner"],a:2},
+        {q:"Capital of Karnataka?",o:["Mysuru","Bengaluru","Mangaluru","Hubli"],a:1},
+        {q:"Capital of India?",o:["Mumbai","Chennai","Kolkata","New Delhi"],a:3},
+        {q:"Capital of Tamil Nadu?",o:["Coimbatore","Madurai","Chennai","Trichy"],a:2},
+        {q:"Capital of West Bengal?",o:["Siliguri","Darjeeling","Kolkata","Asansol"],a:2}]},
+    {n:"Freedom Fighters",s:"India's independence heroes",e:"🕊️",type:"match",tag:"🔗 Match",
+     preview:"Match freedom fighters to their key contributions.",
+     p:[{a:"Mahatma Gandhi",b:"Non-cooperation"},{a:"Subhash Bose",b:"INA"},{a:"Jawaharlal Nehru",b:"First PM"},{a:"Bhagat Singh",b:"Revolutionary"}]},
+    {n:"History True/False",s:"Indian history facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — test your knowledge of Indian history.",
+     tf:[{s:"India became independent on 15 August 1947.",a:true},{s:"Mahatma Gandhi was the first PM of India.",a:false},{s:"The national flag was designed by Pingali Venkayya.",a:true},{s:"India has 28 states and 8 UTs.",a:true},{s:"The Indian Constitution was adopted on 26 Jan 1949.",a:false}]}
+  ]},
+  gk:{label:"🌍 General Knowledge",bg:"#FF8C4218",sheets:[
+    {n:"World GK Quiz",s:"Countries, capitals & facts",e:"🌏",type:"quiz",tag:"🌏 Global",
+     preview:"Test your General Knowledge about the world!",
+     q:[{q:"Largest continent?",o:["Africa","Australia","Asia","Europe"],a:2},
+        {q:"World's tallest mountain?",o:["K2","Everest","Kangchenjunga","Lhotse"],a:1},
+        {q:"Largest ocean?",o:["Atlantic","Indian","Arctic","Pacific"],a:3},
+        {q:"Planets in solar system?",o:["7","8","9","10"],a:1},
+        {q:"The 'Red Planet' is?",o:["Venus","Saturn","Mars","Jupiter"],a:2}]},
+    {n:"GK True/False",s:"World knowledge facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — general knowledge questions about our world.",
+     tf:[{s:"The Sun is a star.",a:true},{s:"The Moon is a planet.",a:false},{s:"Sahara is the largest hot desert.",a:true},{s:"China is the smallest country in the world.",a:false},{s:"Nile is the longest river in the world.",a:true}]},
+    {n:"GK Word Scramble",s:"Famous places & things",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble these famous GK words.",
+     sc:[{clue:"Largest planet in solar system",word:"JUPITER",scrambled:"PEITUJR"},{clue:"Our galaxy",word:"MILKYWAY",scrambled:"YLIKMYAW"},{clue:"Capital of France",word:"PARIS",scrambled:"PIRSA"},{clue:"Tallest mountain",word:"EVEREST",scrambled:"TRESEVE"}]}
+  ]}
+},
+
+// ========================= CLASS 4 =========================
+4:{
+  maths:{label:"🔢 Mathematics",bg:"#FF6B6B18",sheets:[
+    {n:"Large Numbers",s:"Place value up to lakhs",e:"🔟",type:"quiz",tag:"📘 NCERT",
+     preview:"Understand place value, Indian numbering system up to lakhs.",
+     q:[{q:"4,50,000 in words?",o:["Forty-five thousand","Four lakh fifty thousand","Forty-five lakh","Four crore"],a:1},
+        {q:"7 in 37,892 is in which place?",o:["Ones","Hundreds","Thousands","Ten-thousands"],a:3},
+        {q:"Which is greatest?",o:["9,999","10,000","9,990","10,001"],a:3},
+        {q:"Predecessor of 1,00,000?",o:["99,999","1,00,001","9,999","1,01,000"],a:0},
+        {q:"Successor of 9,99,999?",o:["9,99,998","10,00,000","9,99,990","10,00,001"],a:1}]},
+    {n:"Long Multiplication",s:"3-digit × 2-digit",e:"✖️",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the products of larger multiplication problems.",
+     b:[{s:"25 × 4 = ___",a:"100"},{s:"36 × 5 = ___",a:"180"},{s:"48 × 3 = ___",a:"144"},{s:"125 × 4 = ___",a:"500"},{s:"200 × 6 = ___",a:"1200"}]},
+    {n:"Factors & Multiples",s:"LCM and HCF concepts",e:"🔢",type:"tf",tag:"✅ True/False",
+     preview:"True or False — test your knowledge of factors and multiples.",
+     tf:[{s:"2 is a factor of every even number.",a:true},{s:"LCM of 3 and 4 is 7.",a:false},{s:"1 is a factor of every number.",a:true},{s:"HCF of 12 and 18 is 6.",a:true},{s:"Every number is a multiple of itself.",a:true}]},
+    {n:"Geometry Terms",s:"Lines, angles and shapes",e:"📐",type:"match",tag:"🔗 Match",
+     preview:"Match geometry terms to their correct definitions.",
+     p:[{a:"Diameter",b:"Line through centre of circle"},{a:"Radius",b:"Half of diameter"},{a:"Perimeter",b:"Boundary of a shape"},{a:"Area",b:"Space inside a shape"}]},
+    {n:"Maths Word Scramble",s:"Geometry & number terms",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important Class 4 Maths vocabulary words.",
+     sc:[{clue:"Distance around a shape",word:"PERIMETER",scrambled:"ERPIMETЕР"},{clue:"Line cutting circle in two halves",word:"DIAMETER",scrambled:"AREEDMIT"},{clue:"A number with only 2 factors",word:"PRIME",scrambled:"REMPI"},{clue:"Result of division",word:"QUOTIENT",scrambled:"UTEOTIQN"}]}
+  ]},
+  english:{label:"📖 English",bg:"#4FC3F718",sheets:[
+    {n:"Parts of Speech",s:"Nouns, verbs, adjectives, adverbs",e:"📖",type:"quiz",tag:"📘 NCERT",
+     preview:"Identify parts of speech in sentences — Class 4 English grammar.",
+     q:[{q:"'Quickly' is a/an ___",o:["noun","verb","adjective","adverb"],a:3},
+        {q:"Which is an adjective?",o:["run","beautiful","slowly","book"],a:1},
+        {q:"'Laugh' is a ___",o:["noun","verb","adjective","adverb"],a:1},
+        {q:"The word 'golden' describes ___",o:["action","place","quality","thing"],a:2},
+        {q:"Which sentence uses adverb correctly?",o:["She sings beautiful","She sings beautifully","She beautiful sings","Beautiful she sings"],a:1}]},
+    {n:"Punctuation",s:"Full stop, comma, question mark",e:"❓",type:"tf",tag:"✅ True/False",
+     preview:"True or False about punctuation rules in English.",
+     tf:[{s:"A question mark (?) is used at the end of a question.",a:true},{s:"Commas are used to join two complete sentences.",a:false},{s:"'I' is always written in capital.",a:true},{s:"Exclamation mark shows strong feeling.",a:true},{s:"Full stop is used after a question.",a:false}]},
+    {n:"Synonyms",s:"Words with similar meanings",e:"🔗",type:"match",tag:"🔗 Match",
+     preview:"Match words with their synonyms (same or similar meaning).",
+     p:[{a:"Brave",b:"Courageous"},{a:"Big",b:"Large"},{a:"Happy",b:"Joyful"},{a:"Smart",b:"Intelligent"}]},
+    {n:"Word Scramble",s:"Class 4 vocabulary",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important English vocabulary words for Class 4.",
+     sc:[{clue:"Feeling of great joy",word:"HAPPINESS",scrambled:"SINESPAHP"},{clue:"Opposite of question",word:"ANSWER",scrambled:"RENAWS"},{clue:"A book of word meanings",word:"DICTIONARY",scrambled:"ORCNIDITYNA"},{clue:"Person who writes books",word:"AUTHOR",scrambled:"ROAUTH"}]}
+  ]},
+  science:{label:"🔬 Science",bg:"#66BB6A18",sheets:[
+    {n:"Food & Digestion",s:"Nutrients and digestive system",e:"🥗",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about nutrients, the digestive system and healthy eating habits.",
+     q:[{q:"Carbohydrates mainly provide ___",o:["proteins","energy","vitamins","minerals"],a:1},
+        {q:"Which organ helps digest food?",o:["Heart","Lung","Stomach","Brain"],a:2},
+        {q:"Deficiency of Vitamin C causes ___",o:["Rickets","Scurvy","Night blindness","Anaemia"],a:1},
+        {q:"Which food gives most protein?",o:["Rice","Dal","Sugar","Oil"],a:1},
+        {q:"Roughage helps in ___",o:["building muscles","digestion","eyesight","bone strength"],a:1}]},
+    {n:"Light & Shadows",s:"Properties of light",e:"💡",type:"tf",tag:"✅ True/False",
+     preview:"True or False — properties of light and shadow formation.",
+     tf:[{s:"Light travels in straight lines.",a:true},{s:"A transparent object allows all light through.",a:true},{s:"Shadows are longest at noon.",a:false},{s:"Mirror reflects light.",a:true},{s:"Opaque objects form clear shadows.",a:true}]},
+    {n:"The Solar System",s:"Planets and space",e:"🪐",type:"match",tag:"🔗 Match",
+     preview:"Match planets to their key characteristics.",
+     p:[{a:"Mercury",b:"Closest to Sun"},{a:"Mars",b:"Red Planet"},{a:"Jupiter",b:"Largest planet"},{a:"Saturn",b:"Has rings"}]},
+    {n:"Science Scramble",s:"Class 4 science terms",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important Class 4 Science vocabulary.",
+     sc:[{clue:"Process plants use to make food",word:"PHOTOSYNTHESIS",scrambled:"THESSOTYNPISH"},{clue:"Organ that pumps blood",word:"HEART",scrambled:"EARTH"},{clue:"Nearest star to Earth",word:"SUN",scrambled:"UNS"},{clue:"Gas we breathe in",word:"OXYGEN",scrambled:"YONXEG"}]}
+  ]},
+  evs:{label:"🌿 EVS",bg:"#26C6A018",sheets:[
+    {n:"Natural Resources",s:"Air, water, soil, forests",e:"🌍",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about natural resources and why we must conserve them.",
+     q:[{q:"Which is a renewable resource?",o:["Coal","Petroleum","Sunlight","Natural gas"],a:2},
+        {q:"Deforestation means ___",o:["planting trees","cutting trees","watering plants","growing crops"],a:1},
+        {q:"Which fuel is non-renewable?",o:["Solar energy","Wind energy","Coal","Hydropower"],a:2},
+        {q:"Soil erosion is caused by ___",o:["planting trees","wind and water","adding manure","crop rotation"],a:1},
+        {q:"Which conserves water?",o:["Leaking taps","Rainwater harvesting","Long showers","Swimming pool"],a:1}]},
+    {n:"Pollution Types",s:"Air, water, land, noise",e:"🏭",type:"match",tag:"🔗 Match",
+     preview:"Match types of pollution to their main causes.",
+     p:[{a:"Air pollution",b:"Vehicle smoke"},{a:"Water pollution",b:"Factory waste in rivers"},{a:"Land pollution",b:"Plastic waste"},{a:"Noise pollution",b:"Loudspeakers & traffic"}]},
+    {n:"Environment True/False",s:"Conservation facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False about environmental conservation.",
+     tf:[{s:"Solar energy is renewable.",a:true},{s:"Burning plastic is good for environment.",a:false},{s:"3R stands for Reduce, Reuse, Recycle.",a:true},{s:"Afforestation means cutting forests.",a:false},{s:"CNG is cleaner fuel than petrol.",a:true}]}
+  ]},
+  hindi:{label:"📝 Hindi",bg:"#9C6ADE18",sheets:[
+    {n:"विशेषण (Adjectives)",s:"Describing words in Hindi",e:"📝",type:"quiz",tag:"📘 NCERT",
+     preview:"विशेषण पहचानिए और प्रयोग कीजिए — Identify Hindi adjectives.",
+     q:[{q:"'सुंदर' शब्द किस शब्द-भेद का उदाहरण है?",o:["संज्ञा","सर्वनाम","विशेषण","क्रिया"],a:2},
+        {q:"'लाल फूल' में विशेषण है?",o:["लाल","फूल","दोनों","कोई नहीं"],a:0},
+        {q:"कौन सा शब्द विशेषण है?",o:["पानी","चलना","मीठा","भारत"],a:2},
+        {q:"विशेषण किसकी विशेषता बताता है?",o:["क्रिया की","संज्ञा की","सर्वनाम की","वाक्य की"],a:1},
+        {q:"'बड़ा आम' में विशेषण कौन सा है?",o:["आम","बड़ा","दोनों","कोई नहीं"],a:1}]},
+    {n:"विलोम शब्द",s:"Antonyms in Hindi",e:"🔄",type:"match",tag:"🔗 Match",
+     preview:"Match Hindi words to their antonyms (विलोम शब्द).",
+     p:[{a:"दिन",b:"रात"},{a:"गर्म",b:"ठंडा"},{a:"अच्छा",b:"बुरा"},{a:"आना",b:"जाना"}]},
+    {n:"हिंदी रिक्त स्थान",s:"Fill in Hindi blanks",e:"✏️",type:"blanks",tag:"✏️ Practice",
+     preview:"रिक्त स्थान भरिए — Complete these Hindi sentences.",
+     b:[{s:"गाय हमें ___ देती है।",a:"दूध"},{s:"पेड़ हमें ___ देते हैं।",a:"ऑक्सीजन"},{s:"हमारा राष्ट्रगान ___ ने लिखा।",a:"टैगोर"},{s:"भारत का राष्ट्रीय खेल ___ है।",a:"हॉकी"}]}
+  ]},
+  sst:{label:"🗺️ Social Studies",bg:"#F0629218",sheets:[
+    {n:"Indian Geography",s:"Mountains, rivers & plateaus",e:"🗺️",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about India's physical geography — rivers, mountains and plains.",
+     q:[{q:"Longest river of India?",o:["Yamuna","Ganga","Godavari","Krishna"],a:1},
+        {q:"Which mountains are in the north of India?",o:["Aravalli","Satpura","Himalayas","Vindhya"],a:2},
+        {q:"The Deccan Plateau is in ___",o:["North India","South India","East India","West India"],a:1},
+        {q:"Which river flows through Delhi?",o:["Ganga","Brahmaputra","Yamuna","Narmada"],a:2},
+        {q:"The Thar Desert is in which state?",o:["Gujarat","Punjab","Rajasthan","Haryana"],a:2}]},
+    {n:"Indian Culture",s:"Festivals, food & languages",e:"🎭",type:"match",tag:"🔗 Match",
+     preview:"Match Indian festivals to the states they are mainly celebrated in.",
+     p:[{a:"Pongal",b:"Tamil Nadu"},{a:"Bihu",b:"Assam"},{a:"Onam",b:"Kerala"},{a:"Durga Puja",b:"West Bengal"}]},
+    {n:"History & Civics True/False",s:"Indian history facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — Indian history and civics knowledge.",
+     tf:[{s:"The Lok Sabha is the upper house of Parliament.",a:false},{s:"India has a federal system of government.",a:true},{s:"Preamble is the introduction to the Constitution.",a:true},{s:"The President is the head of the Indian Army.",a:true},{s:"India has only one official language.",a:false}]}
+  ]},
+  gk:{label:"🌍 General Knowledge",bg:"#FF8C4218",sheets:[
+    {n:"Science GK",s:"Amazing science facts",e:"🔭",type:"quiz",tag:"🔬 Science",
+     preview:"Interesting GK questions about science and technology.",
+     q:[{q:"Speed of light is approximately ___",o:["1 lakh km/s","3 lakh km/s","5 lakh km/s","10 lakh km/s"],a:1},
+        {q:"Hardest natural substance?",o:["Gold","Iron","Diamond","Granite"],a:2},
+        {q:"DNA stands for ___",o:["Deoxyribonucleic Acid","Dinitrogen Acid","Deoxyribose Ammonia","None"],a:0},
+        {q:"Which planet has the most moons?",o:["Jupiter","Saturn","Uranus","Neptune"],a:1},
+        {q:"Inventor of telephone?",o:["Edison","Graham Bell","Newton","Tesla"],a:1}]},
+    {n:"Inventions Match",s:"Who invented what",e:"💡",type:"match",tag:"🔗 Match",
+     preview:"Match inventions to their inventors.",
+     p:[{a:"Telephone",b:"Graham Bell"},{a:"Bulb",b:"Edison"},{a:"Aeroplane",b:"Wright Brothers"},{a:"Penicillin",b:"Fleming"}]},
+    {n:"GK True/False",s:"World knowledge",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — general knowledge about the world.",
+     tf:[{s:"Amazon is the largest river by volume.",a:true},{s:"Tokyo is the capital of China.",a:false},{s:"The Olympics are held every 4 years.",a:true},{s:"Cricket was invented in India.",a:false},{s:"Mount Everest is in Nepal.",a:true}]}
+  ]}
+},
+
+// ========================= CLASS 5 =========================
+5:{
+  maths:{label:"🔢 Mathematics",bg:"#FF6B6B18",sheets:[
+    {n:"Decimals",s:"Tenths, hundredths, operations",e:"💯",type:"quiz",tag:"📘 NCERT",
+     preview:"Understand decimals, compare them and perform operations.",
+     q:[{q:"0.5 + 0.3 = ?",o:["0.7","0.8","0.9","1.0"],a:1},
+        {q:"Which is greatest?",o:["0.9","0.09","0.99","0.009"],a:2},
+        {q:"1.5 × 2 = ?",o:["2.5","3.0","3.5","2.0"],a:1},
+        {q:"3.6 ÷ 0.6 = ?",o:["4","5","6","7"],a:2},
+        {q:"0.25 + 0.75 = ?",o:["0.5","1.0","1.5","0.25"],a:1}]},
+    {n:"Percentage Basics",s:"Understanding percentage",e:"%",type:"blanks",tag:"✏️ Practice",
+     preview:"Fill in the blanks about percentages — an important Class 5 Maths topic.",
+     b:[{s:"50% of 200 = ___",a:"100"},{s:"25% of 80 = ___",a:"20"},{s:"10% of 500 = ___",a:"50"},{s:"100% of 75 = ___",a:"75"},{s:"5% of 60 = ___",a:"3"}]},
+    {n:"Profit & Loss",s:"Basic profit and loss concepts",e:"💰",type:"tf",tag:"✅ True/False",
+     preview:"True or False about basic profit and loss problems.",
+     tf:[{s:"Profit = Selling Price - Cost Price when SP > CP.",a:true},{s:"Loss occurs when Selling Price is more than Cost Price.",a:false},{s:"If CP = SP, there is no profit or loss.",a:true},{s:"Discount is added to the selling price.",a:false},{s:"15% profit on ₹100 means profit = ₹15.",a:true}]},
+    {n:"Geometry Advanced",s:"Area and perimeter",e:"📐",type:"match",tag:"🔗 Match",
+     preview:"Match shapes to their area and perimeter formulas.",
+     p:[{a:"Perimeter of square",b:"4 × side"},{a:"Area of rectangle",b:"length × breadth"},{a:"Area of square",b:"side × side"},{a:"Perimeter of rectangle",b:"2 × (l + b)"}]},
+    {n:"Maths Terms Scramble",s:"Class 5 maths vocabulary",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble these important Class 5 Maths terms.",
+     sc:[{clue:"Per hundred",word:"PERCENT",scrambled:"CENTPER"},{clue:"Money earned above cost",word:"PROFIT",scrambled:"TIPFOR"},{clue:"Numbers after decimal point",word:"DECIMALS",scrambled:"SLACIMED"},{clue:"Ratio of a part to whole times 100",word:"PERCENTAGE",scrambled:"CEPTEANGER"}]}
+  ]},
+  english:{label:"📖 English",bg:"#4FC3F718",sheets:[
+    {n:"Active & Passive Voice",s:"Voice transformation",e:"📖",type:"quiz",tag:"📘 NCERT",
+     preview:"Identify and convert Active and Passive voice sentences — Class 5 English.",
+     q:[{q:"'Ravi eats the apple.' — This is ___ voice.",o:["Passive","Active","Both","None"],a:1},
+        {q:"Passive of 'She writes a letter' is?",o:["A letter writes she","A letter is written by her","She is written a letter","Letter by her written"],a:1},
+        {q:"In passive voice, the ___ comes first.",o:["subject","object","verb","adjective"],a:1},
+        {q:"Which is passive voice?",o:["Dogs bark","He reads books","The book was read by him","She is singing"],a:2},
+        {q:"'The mango was eaten by the boy.' — who performed the action?",o:["Mango","Boy","Was","Eaten"],a:1}]},
+    {n:"Figures of Speech",s:"Simile, metaphor, alliteration",e:"🎭",type:"match",tag:"🔗 Match",
+     preview:"Match figures of speech to their examples.",
+     p:[{a:"Simile",b:"As brave as a lion"},{a:"Metaphor",b:"Life is a journey"},{a:"Alliteration",b:"Peter picked peppers"},{a:"Personification",b:"The wind whispered"}]},
+    {n:"Advanced Grammar",s:"Clauses, tenses & conjunctions",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False about advanced English grammar concepts.",
+     tf:[{s:"A conjunction joins two sentences.",a:true},{s:"'Although' shows contrast.",a:true},{s:"A dependent clause can stand alone.",a:false},{s:"'Because' is a conjunction.",a:true},{s:"An adverb modifies a noun.",a:false}]},
+    {n:"Literary Terms Scramble",s:"English literary vocabulary",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important literary and grammar terms for Class 5.",
+     sc:[{clue:"Comparing using 'like' or 'as'",word:"SIMILE",scrambled:"LISIME"},{clue:"Repeating first consonant sounds",word:"ALLITERATION",scrambled:"IRTILNLAETOA"},{clue:"Giving human qualities to objects",word:"PERSONIFICATION",scrambled:"CATIFINSONIPRE"},{clue:"Story told in poetry",word:"BALLAD",scrambled:"DLALAB"}]}
+  ]},
+  science:{label:"🔬 Science",bg:"#66BB6A18",sheets:[
+    {n:"Human Body Systems",s:"Digestive, respiratory, circulatory",e:"🫀",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about the major systems of the human body — Class 5 Science.",
+     q:[{q:"Digestion begins in the ___",o:["Stomach","Mouth","Small intestine","Large intestine"],a:1},
+        {q:"Oxygen is carried to body cells by ___",o:["Plasma","White blood cells","Red blood cells","Platelets"],a:2},
+        {q:"The organ of breathing is ___",o:["Heart","Kidney","Lung","Liver"],a:2},
+        {q:"Arteries carry ___ blood from the heart.",o:["deoxygenated","oxygenated","mixed","dark"],a:1},
+        {q:"The kidney's job is to ___",o:["pump blood","digest food","filter waste from blood","produce oxygen"],a:2}]},
+    {n:"Reproduction in Plants",s:"Seeds, pollination, dispersal",e:"🌸",type:"match",tag:"🔗 Match",
+     preview:"Match plant reproduction terms to their definitions.",
+     p:[{a:"Pollination",b:"Transfer of pollen to stigma"},{a:"Germination",b:"Seed sprouts into plant"},{a:"Dispersal",b:"Spreading of seeds"},{a:"Fertilisation",b:"Pollen meets ovule"}]},
+    {n:"Science True/False",s:"Advanced science facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False — Class 5 Science advanced concepts.",
+     tf:[{s:"Microorganisms are visible to naked eye.",a:false},{s:"Fungi are decomposers.",a:true},{s:"The heart has 4 chambers.",a:true},{s:"Veins carry oxygenated blood.",a:false},{s:"Vaccines prevent diseases.",a:true}]},
+    {n:"Science Vocabulary Scramble",s:"Class 5 science terms",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important Class 5 Science vocabulary words.",
+     sc:[{clue:"Tiny organisms causing disease",word:"MICROBES",scrambled:"COSRMIEB"},{clue:"Transfer of pollen between flowers",word:"POLLINATION",scrambled:"APOLILTNINO"},{clue:"Process of seed sprouting",word:"GERMINATION",scrambled:"ATIMIGENRNO"},{clue:"Blood vessel carrying blood to heart",word:"VEIN",scrambled:"VENI"}]}
+  ]},
+  evs:{label:"🌿 EVS",bg:"#26C6A018",sheets:[
+    {n:"Ecosystem & Food Chain",s:"Producers, consumers, decomposers",e:"🌿",type:"quiz",tag:"📘 NCERT",
+     preview:"Understand ecosystems, food chains and food webs.",
+     q:[{q:"Plants are called ___ in a food chain.",o:["Consumers","Decomposers","Producers","Predators"],a:2},
+        {q:"Decomposers break down ___",o:["living things","sunlight","dead matter","water"],a:2},
+        {q:"Which is a correct food chain?",o:["Fox → Rabbit → Grass","Grass → Rabbit → Fox","Rabbit → Grass → Fox","Fox → Grass → Rabbit"],a:1},
+        {q:"An ecosystem includes ___ components.",o:["only biotic","only abiotic","both biotic and abiotic","neither"],a:2},
+        {q:"Top of a food chain is usually a ___",o:["producer","herbivore","apex predator","decomposer"],a:2}]},
+    {n:"Conservation & Sustainability",s:"Save Earth activities",e:"♻️",type:"tf",tag:"✅ True/False",
+     preview:"True or False about conservation and sustainable living.",
+     tf:[{s:"Biodiversity means variety of life on Earth.",a:true},{s:"Endangered species are those at risk of extinction.",a:true},{s:"National parks allow hunting.",a:false},{s:"Fossil fuels are renewable.",a:false},{s:"Recycling reduces waste.",a:true}]},
+    {n:"EVS Scramble",s:"Environmental science terms",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble these important environmental science words.",
+     sc:[{clue:"Variety of life on Earth",word:"BIODIVERSITY",scrambled:"BIVITYDORSIED"},{clue:"Breaking down of dead matter",word:"DECOMPOSITION",scrambled:"COPOMESDITION"},{clue:"Chain of eating relationships",word:"FOODCHAIN",scrambled:"CHAIFOODN"},{clue:"Area protected for wildlife",word:"SANCTUARY",scrambled:"CRACYNAUST"}]}
+  ]},
+  hindi:{label:"📝 Hindi",bg:"#9C6ADE18",sheets:[
+    {n:"वाक्य के भेद",s:"Types of sentences in Hindi",e:"📝",type:"quiz",tag:"📘 NCERT",
+     preview:"वाक्य के भेद पहचानिए — Identify types of Hindi sentences.",
+     q:[{q:"'क्या तुम खाना खाओगे?' — यह कौन सा वाक्य है?",o:["विधानवाचक","प्रश्नवाचक","आज्ञावाचक","विस्मयादिबोधक"],a:1},
+        {q:"'शाबाश! तुमने अच्छा काम किया' — यह कौन सा वाक्य है?",o:["विधानवाचक","प्रश्नवाचक","विस्मयादिबोधक","आज्ञावाचक"],a:2},
+        {q:"'राम खाना खाता है' — यह किस प्रकार का वाक्य है?",o:["प्रश्नवाचक","निषेधवाचक","विधानवाचक","आज्ञावाचक"],a:2},
+        {q:"'यहाँ मत आओ' — यह वाक्य है?",o:["विधानवाचक","निषेधवाचक","प्रश्नवाचक","विस्मयादिबोधक"],a:1},
+        {q:"आज्ञावाचक वाक्य में होता है?",o:["प्रश्न","आज्ञा","विस्मय","इनकार"],a:1}]},
+    {n:"मुहावरे",s:"Hindi idioms and meanings",e:"🗣️",type:"match",tag:"🔗 Match",
+     preview:"मुहावरों के सही अर्थ से मिलाइए — Match Hindi idioms to their meanings.",
+     p:[{a:"नौ दो ग्यारह होना",b:"भाग जाना"},{a:"आँखें खुलना",b:"होश आना"},{a:"दाँत खट्टे करना",b:"हराना"},{a:"हाथ-पाँव फूलना",b:"डर जाना"}]},
+    {n:"Hindi True/False",s:"Hindi grammar facts",e:"✅",type:"tf",tag:"✅ True/False",
+     preview:"True or False about Hindi grammar and language.",
+     tf:[{s:"हिंदी भारत की राजभाषा है।",a:true},{s:"संज्ञा क्रिया का भेद है।",a:false},{s:"देवनागरी लिपि में हिंदी लिखी जाती है।",a:true},{s:"विशेषण संज्ञा की विशेषता बताता है।",a:true},{s:"'खाना' एक संज्ञा नहीं है।",a:false}]}
+  ]},
+  sst:{label:"🗺️ Social Studies",bg:"#F0629218",sheets:[
+    {n:"Medieval India",s:"Mughal Empire & Delhi Sultanate",e:"🏰",type:"quiz",tag:"📘 NCERT",
+     preview:"Learn about Medieval India — the Mughal Empire and important rulers.",
+     q:[{q:"The first Mughal Emperor was ___",o:["Akbar","Babur","Humayun","Aurangzeb"],a:1},
+        {q:"Taj Mahal was built by ___",o:["Akbar","Babur","Shah Jahan","Aurangzeb"],a:2},
+        {q:"Delhi Sultanate began in ___",o:["1000 AD","1206 AD","1526 AD","1600 AD"],a:1},
+        {q:"Akbar was famous for his policy of ___",o:["Religious war","Sulh-i-kul (peace with all)","Forced conversion","None"],a:1},
+        {q:"The Battle of Panipat (1526) was fought between ___",o:["Akbar & Hemu","Babur & Ibrahim Lodi","Aurangzeb & Shivaji","Humayun & Sher Shah"],a:1}]},
+    {n:"World Geography",s:"Continents, oceans & countries",e:"🌍",type:"match",tag:"🔗 Match",
+     preview:"Match countries to their continents — world geography for Class 5.",
+     p:[{a:"Brazil",b:"South America"},{a:"Egypt",b:"Africa"},{a:"Australia",b:"Oceania"},{a:"Russia",b:"Europe/Asia"}]},
+    {n:"Civics & Government",s:"Indian Constitution & governance",e:"🏛️",type:"tf",tag:"✅ True/False",
+     preview:"True or False about the Indian government and Constitution.",
+     tf:[{s:"India is a democratic republic.",a:true},{s:"The Rajya Sabha is the lower house of Parliament.",a:false},{s:"The President is elected every 5 years.",a:true},{s:"India has a two-party system.",a:false},{s:"The Prime Minister is head of the government.",a:true}]},
+    {n:"SSt Scramble",s:"History & geography terms",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble important Social Studies vocabulary for Class 5.",
+     sc:[{clue:"Rule by the people",word:"DEMOCRACY",scrambled:"YAMCOCRDE"},{clue:"Document of fundamental laws",word:"CONSTITUTION",scrambled:"UTIOTSCNINTO"},{clue:"Story of the past",word:"HISTORY",scrambled:"RYHISTО"},{clue:"Science of maps",word:"GEOGRAPHY",scrambled:"YPAHRGEGO"}]}
+  ]},
+  gk:{label:"🌍 General Knowledge",bg:"#FF8C4218",sheets:[
+    {n:"Advanced World GK",s:"International facts & records",e:"🌏",type:"quiz",tag:"🌏 Global",
+     preview:"Challenge yourself with advanced General Knowledge questions!",
+     q:[{q:"Which country has the largest population?",o:["USA","India","China","Russia"],a:1},
+        {q:"The Great Wall is in which country?",o:["Japan","India","China","Korea"],a:2},
+        {q:"Who wrote the National Anthem of India?",o:["Bankim Chandra","Rabindranath Tagore","Sarojini Naidu","Mahatma Gandhi"],a:1},
+        {q:"Which is the smallest continent?",o:["Europe","Antarctica","Australia","South America"],a:2},
+        {q:"First Indian to go to space?",o:["Sunita Williams","Kalpana Chawla","Rakesh Sharma","APJ Abdul Kalam"],a:2}]},
+    {n:"Science & Tech GK",s:"Modern science and technology",e:"🚀",type:"match",tag:"🔗 Match",
+     preview:"Match famous scientists to their discoveries or inventions.",
+     p:[{a:"Newton",b:"Laws of gravity"},{a:"Einstein",b:"Theory of relativity"},{a:"Darwin",b:"Theory of evolution"},{a:"Marie Curie",b:"Radioactivity"}]},
+    {n:"Current Affairs GK",s:"India & world knowledge",e:"📰",type:"tf",tag:"✅ True/False",
+     preview:"True or False — important GK facts every Class 5 student should know.",
+     tf:[{s:"ISRO stands for Indian Space Research Organisation.",a:true},{s:"The United Nations has 50 member countries.",a:false},{s:"2024 Olympics were held in Paris.",a:true},{s:"India launched Chandrayaan-3 in 2023.",a:true},{s:"The capital of Australia is Sydney.",a:false}]},
+    {n:"Famous Firsts Scramble",s:"Record-breaking facts",e:"🔀",type:"scramble",tag:"🔀 Scramble",
+     preview:"Unscramble these names and places famous for being 'firsts'.",
+     sc:[{clue:"First man on the Moon",word:"ARMSTRONG",scrambled:"NRTGSMROA"},{clue:"First woman PM of India",word:"INDIRA",scrambled:"DAIRNI"},{clue:"First satellite in space",word:"SPUTNIK",scrambled:"TIKNUPS"},{clue:"First country to land on Moon's south pole",word:"INDIA",scrambled:"IIDNA"}]}
+  ]}
+}
+};
+
+// =====================================================================
+// STATE & LOGIC
+// =====================================================================
+let cls=2, sub='maths', filterType='all';
+let pts=0, streak=0;
+let curAct=null;
+// quiz
+let qIdx=0, qScore=0, qDone=false;
+// tf
+let tfScores={}, tfDone=false;
+// blanks checked
+// match
+let matchSel=null, matchDoneSet=new Set();
+// scramble
+let scrState={};
+
+const typeColors={quiz:"tag-quiz",blanks:"tag-blanks",match:"tag-match",tf:"tag-tf",scramble:"tag-scramble"};
+const typeLabels={quiz:"❓ Quiz",blanks:"✏️ Fill Blanks",match:"🔗 Match",tf:"✅ True/False",scramble:"🔀 Scramble"};
+const cfColors=['#FF6B6B','#FFD93D','#66BB6A','#4FC3F7','#9C6ADE','#FF8C42','#F06292'];
+
+function setClass(el,c){
+  cls=c; filterType='all';
+  document.querySelectorAll('.class-pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  updateBadge(); renderTypeFilter(); renderGrid();
+}
+function setSub(el,s){
+  sub=s; filterType='all';
+  document.querySelectorAll('.subject-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sec-title').innerHTML=DATA[cls][sub].label+' <span class="sec-badge" id="sec-badge">Class '+cls+'</span>';
+  renderTypeFilter(); renderGrid();
+}
+function updateBadge(){
+  document.getElementById('sec-title').innerHTML=DATA[cls][sub].label+' <span class="sec-badge" id="sec-badge">Class '+cls+'</span>';
+}
+function renderTypeFilter(){
+  const sheets=DATA[cls][sub].sheets;
+  const types=['all',...new Set(sheets.map(s=>s.type))];
+  document.getElementById('type-filter').innerHTML=types.map(t=>`
+    <button class="type-btn ${filterType===t?'active':''}" onclick="setFilter('${t}')">
+      ${t==='all'?'📋 All':typeLabels[t]}
+    </button>`).join('');
+}
+function setFilter(t){filterType=t;renderTypeFilter();renderGrid();}
+function renderGrid(){
+  const d=DATA[cls][sub];
+  let sheets=d.sheets;
+  if(filterType!=='all') sheets=sheets.filter(s=>s.type===filterType);
+  document.getElementById('ws-grid').innerHTML=sheets.map((s,i)=>{
+    const realIdx=DATA[cls][sub].sheets.indexOf(s);
+    return `
+    <div class="ws-card" onclick="openAct(${realIdx})">
+      <div class="ws-card-tag ${typeColors[s.type]}">${typeLabels[s.type]}</div>
+      <div class="ws-card-top">
+        <div class="ws-icon" style="background:${d.bg}">${s.e}</div>
+        <div class="ws-meta"><div class="ws-name">${s.n}</div><div class="ws-sub">${s.s}</div></div>
+      </div>
+      <div class="ws-card-body">
+        <div class="ws-preview">${s.preview}</div>
+        <div class="ws-actions">
+          <button class="btn-play">▶ Start</button>
+          <span class="btn-type-badge">${s.tag}</span>
+        </div>
+      </div>
+    </div>`}).join('');
+}
+function openAct(i){
+  curAct=DATA[cls][sub].sheets[i];
+  document.getElementById('overlay').classList.add('open');
+  const t=curAct.type;
+  if(t==='quiz') initQuiz();
+  else if(t==='blanks') initBlanks();
+  else if(t==='match') initMatch();
+  else if(t==='tf') initTF();
+  else initScramble();
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// ---- QUIZ ----
+function initQuiz(){qIdx=0;qScore=0;qDone=false;renderQ();}
+function renderQ(){
+  const q=curAct.q[qIdx];
+  const pct=Math.round(qIdx/curAct.q.length*100);
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n}</div>
+    <div class="qprog"><div class="qprog-fill" style="width:${pct}%"></div></div>
+    <div class="q-box"><div class="q-num">Q${qIdx+1} / ${curAct.q.length}</div><div class="q-text">${q.q}</div></div>
+    <div class="opts">${q.o.map((o,i)=>`<button class="opt" onclick="ansQ(${i})">${o}</button>`).join('')}</div>
+    <div class="fb idle" id="fb">Choose an answer ☝️</div>
+    <button class="action-btn next" id="nb" onclick="nextQ()">${qIdx+1<curAct.q.length?'Next →':'Results 🎉'}</button>`;
+  qDone=false;
+}
+function ansQ(i){
+  if(qDone)return; qDone=true;
+  const q=curAct.q[qIdx];
+  const opts=document.querySelectorAll('.opt');
+  const fb=document.getElementById('fb');
+  if(i===q.a){opts[i].classList.add('correct');fb.textContent='✅ Correct! Brilliant!';fb.className='fb good';qScore++;pts+=10;streak++;confetti(4);}
+  else{opts[i].classList.add('wrong');opts[q.a].classList.add('correct');fb.textContent='❌ Not quite! Correct answer highlighted.';fb.className='fb bad';streak=0;}
+  updScore(); document.getElementById('nb').classList.add('show');
+}
+function nextQ(){qIdx++;if(qIdx>=curAct.q.length)showResult();else renderQ();}
+function showResult(){
+  const pct=Math.round(qScore/curAct.q.length*100);
+  const stars=pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐';
+  const msg=pct>=80?'Outstanding! You nailed it! 🎉':pct>=60?'Well done! Keep going! 😊':'Keep practicing! 💪';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n} — Results</div>
+    <div class="result"><div class="r-stars">${stars}</div>
+    <div class="r-score">${qScore}/${curAct.q.length}</div>
+    <div class="r-msg">${msg}</div>
+    <div class="r-stats">Accuracy: <b>${pct}%</b><br>Points: <b>+${qScore*10} ⭐</b><br>${pct>=80?'🏆 Quiz Champion!':'📖 Review and retry!'}</div>
+    <button class="action-btn retry show" onclick="initQuiz()">🔄 Try Again</button></div>`;
+  if(pct>=80)confetti(20);
+}
+
+// ---- BLANKS ----
+function initBlanks(){
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n}</div>
+    <p class="blank-hint">📝 Fill in the correct word for each blank:</p>
+    ${curAct.b.map((b,i)=>`<div class="blank-row">${b.s.replace('___',`<input class="blank-inp" id="bi${i}" type="text" placeholder="?">`)}</div>`).join('')}
+    <button class="check-btn" onclick="chkBlanks()">✅ Check Answers</button>
+    <div class="fb idle" id="bfb" style="margin-top:10px">Fill all blanks then tap Check!</div>`;
+}
+function chkBlanks(){
+  let ok=0;
+  curAct.b.forEach((b,i)=>{
+    const inp=document.getElementById('bi'+i);
+    const correct=inp.value.trim().toLowerCase()===b.a.toLowerCase();
+    inp.classList.toggle('ok',correct); inp.classList.toggle('fail',!correct);
+    if(correct)ok++;
+  });
+  const pct=Math.round(ok/curAct.b.length*100);
+  pts+=ok*8; updScore();
+  const fb=document.getElementById('bfb');
+  fb.textContent=ok+'/'+curAct.b.length+' correct! '+(pct>=75?'🎉 Fantastic!':'💪 Review and retry!');
+  fb.className='fb '+(pct>=75?'good':'bad');
+  if(pct>=75)confetti(12);
+}
+
+// ---- TRUE/FALSE ----
+function initTF(){
+  tfScores={};
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n}</div>
+    <p class="blank-hint">✅ Tap True or False for each statement:</p>
+    ${curAct.tf.map((t,i)=>`
+      <div class="tf-row">
+        <div class="tf-stmt">Q${i+1}. ${t.s}</div>
+        <div class="tf-btns">
+          <button class="tf-btn" data-v="true" onclick="ansTF(${i},true,this)">✅ True</button>
+          <button class="tf-btn" data-v="false" onclick="ansTF(${i},false,this)">❌ False</button>
+        </div>
+      </div>`).join('')}
+    <button class="check-btn" id="tf-submit" style="display:none" onclick="showTFResult()">See Results 🎉</button>
+    <div class="fb idle" id="tffb" style="margin-top:8px">Answer all questions above!</div>`;
+}
+function ansTF(i,val,btn){
+  if(tfScores[i]!==undefined)return;
+  const correct=val===curAct.tf[i].a;
+  btn.classList.add(correct?'correct':'wrong');
+  // also show correct one if wrong
+  if(!correct){
+    const sibling=btn.parentElement.querySelector(`[data-v="${curAct.tf[i].a}"]`);
+    if(sibling)sibling.classList.add('correct');
+  }
+  btn.parentElement.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);
+  tfScores[i]=correct?1:0;
+  if(correct){pts+=8;streak++;confetti(2);}else{streak=0;}
+  updScore();
+  if(Object.keys(tfScores).length===curAct.tf.length){
+    document.getElementById('tf-submit').style.display='block';
+    document.getElementById('tffb').textContent='Great! Tap "See Results" below.';
+    document.getElementById('tffb').className='fb good';
+  }
+}
+function showTFResult(){
+  const score=Object.values(tfScores).reduce((a,b)=>a+b,0);
+  const pct=Math.round(score/curAct.tf.length*100);
+  const stars=pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n} — Results</div>
+    <div class="result"><div class="r-stars">${stars}</div>
+    <div class="r-score">${score}/${curAct.tf.length}</div>
+    <div class="r-msg">${pct>=80?'Perfect! You know your facts! 🎉':pct>=60?'Good job! Almost there! 😊':'Review the statements and retry! 💪'}</div>
+    <div class="r-stats">Score: <b>${pct}%</b><br>Points earned: <b>+${score*8} ⭐</b></div>
+    <button class="action-btn retry show" onclick="initTF()">🔄 Try Again</button></div>`;
+  if(pct>=80)confetti(18);
+}
+
+// ---- MATCH ----
+function initMatch(){
+  matchSel=null; matchDoneSet=new Set();
+  const pairs=curAct.p;
+  const right=[...pairs].map((p,i)=>({...p,i})).sort(()=>Math.random()-.5);
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n}</div>
+    <p class="match-hint">🔗 Tap left item then its match on the right:</p>
+    <div class="match-grid">
+      <div class="match-col">${pairs.map((p,i)=>`<div class="mi" id="ml${i}" onclick="pickL(${i})">${p.a}</div>`).join('')}</div>
+      <div class="match-col">${right.map((p,j)=>`<div class="mi" id="mr${j}" onclick="pickR(${j},${p.i})">${p.b}</div>`).join('')}</div>
+    </div>
+    <div class="fb idle" id="mfb">Tap a left item to start!</div>`;
+}
+function pickL(i){
+  if(matchDoneSet.has('L'+i))return;
+  document.querySelectorAll('.mi').forEach(m=>{if(!m.classList.contains('done'))m.classList.remove('sel','err');});
+  matchSel=i; document.getElementById('ml'+i).classList.add('sel');
+}
+function pickR(j,pi){
+  if(matchSel===null||matchDoneSet.has('R'+j))return;
+  const ml=document.getElementById('ml'+matchSel), mr=document.getElementById('mr'+j);
+  if(matchSel===pi){
+    ml.classList.replace('sel','done'); mr.classList.add('done');
+    matchDoneSet.add('L'+matchSel); matchDoneSet.add('R'+j);
+    pts+=12; streak++; updScore(); confetti(3); matchSel=null;
+    const fb=document.getElementById('mfb');
+    if(matchDoneSet.size===curAct.p.length*2){fb.textContent='🎉 All matched! Perfect!';fb.className='fb good';confetti(18);}
+    else{fb.textContent='✅ Correct! Keep going!';fb.className='fb good';}
+  }else{
+    ml.classList.add('err'); mr.classList.add('err'); streak=0; updScore();
+    setTimeout(()=>{ml.classList.remove('err','sel');mr.classList.remove('err');matchSel=null;},650);
+    const fb=document.getElementById('mfb');fb.textContent='❌ Not a match, try again!';fb.className='fb bad';
+  }
+}
+
+// ---- SCRAMBLE ----
+function initScramble(){
+  scrState={};
+  curAct.sc.forEach((sc,i)=>{
+    const letters=sc.scrambled.split('');
+    scrState[i]={letters,used:new Array(letters.length).fill(false),answer:[]};
+  });
+  renderScramble();
+}
+function renderScramble(){
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-title">${curAct.n}</div>
+    <p class="scramble-hint">🔀 Tap letters to build the correct word. Tap answer letters to remove them.</p>
+    ${curAct.sc.map((sc,i)=>`
+      <div class="scramble-item" id="sci${i}">
+        <div class="scramble-clue">💡 ${sc.clue}</div>
+        <div class="scramble-letters" id="sl${i}">
+          ${scrState[i].letters.map((l,j)=>`<div class="letter-tile ${scrState[i].used[j]?'used':''}" id="lt${i}_${j}" onclick="addLetter(${i},${j})">${l}</div>`).join('')}
+        </div>
+        <div class="scramble-answer" id="sa${i}">
+          ${scrState[i].answer.map((a,k)=>`<div class="answer-tile" onclick="removeLetter(${i},${k})">${a.l}</div>`).join('')}
+          ${scrState[i].answer.length===0?'<span style="color:#ccc;font-size:12px;font-weight:700">Tap letters above ↑</span>':''}
+        </div>
+        <div class="scramble-fb" id="sfb${i}"></div>
+      </div>`).join('')}
+    <button class="scramble-check" onclick="checkScramble()">✅ Check All Words</button>
+    <div class="fb idle" id="scfb" style="margin-top:10px">Tap Check when done!</div>`;
+}
+function addLetter(si,li){
+  const st=scrState[si];
+  if(st.used[li])return;
+  st.used[li]=true;
+  st.answer.push({l:curAct.sc[si].scrambled[li],idx:li});
+  refreshScrambleItem(si);
+}
+function removeLetter(si,ai){
+  const st=scrState[si];
+  const item=st.answer[ai];
+  st.used[item.idx]=false;
+  st.answer.splice(ai,1);
+  refreshScrambleItem(si);
+}
+function refreshScrambleItem(si){
+  const sc=curAct.sc[si], st=scrState[si];
+  const container=document.getElementById('sci'+si);
+  container.querySelector(`#sl${si}`).innerHTML=st.letters.map((l,j)=>`<div class="letter-tile ${st.used[j]?'used':''}" id="lt${si}_${j}" onclick="addLetter(${si},${j})">${l}</div>`).join('');
+  container.querySelector(`#sa${si}`).innerHTML=st.answer.map((a,k)=>`<div class="answer-tile" onclick="removeLetter(${si},${k})">${a.l}</div>`).join('')||(st.answer.length===0?'<span style="color:#ccc;font-size:12px;font-weight:700">Tap letters above ↑</span>':'');
+}
+function checkScramble(){
+  let ok=0;
+  curAct.sc.forEach((sc,i)=>{
+    const ans=scrState[i].answer.map(a=>a.l).join('');
+    const fb=document.getElementById('sfb'+i);
+    if(ans===sc.word){fb.textContent='✅ Correct! '+sc.word;fb.className='scramble-fb ok';ok++;pts+=10;confetti(3);}
+    else{fb.textContent='❌ Correct word: '+sc.word;fb.className='scramble-fb fail';}
+  });
+  streak+=ok; updScore();
+  const pct=Math.round(ok/curAct.sc.length*100);
+  const fb=document.getElementById('scfb');
+  fb.textContent=ok+'/'+curAct.sc.length+' correct! '+(pct>=75?'🎉 Excellent!':'💪 Try again!');
+  fb.className='fb '+(pct>=75?'good':'bad');
+  if(pct>=75)confetti(15);
+}
+
+// ---- HELPERS ----
+function updScore(){
+  document.getElementById('pts').textContent=pts;
+  document.getElementById('streak').textContent=streak;
+}
+function confetti(n){
+  for(let i=0;i<n;i++){
+    const el=document.createElement('div');
+    el.className='cp';
+    el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${cfColors[Math.floor(Math.random()*cfColors.length)]};animation-delay:${Math.random()*.7}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2400);
+  }
+}
+
+// Init
+renderTypeFilter();
+renderGrid();
+</script>
+</body>
+</html>
